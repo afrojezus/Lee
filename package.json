@@ -62,7 +62,9 @@
         "startthefuckingthing": "concurrently --kill-others \"yarn watch\" \"yarn start\""
     },
     "devDependencies": {
+        "babel-eslint": "^7.2.3",
         "concurrently": "^3.5.0",
+        "eslint-plugin-react": "^7.1.0",
         "postcss-cli": "^4.1.0",
         "sass-lint": "^1.10.2"
     }
