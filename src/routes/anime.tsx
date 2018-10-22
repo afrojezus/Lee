@@ -7,7 +7,7 @@ import {
   withStyles
 } from '@material-ui/core';
 import React from 'react';
-import ABG from '../assets/Anime.mp4';
+// import ABG from '../assets/Anime.mp4';
 // import Ripple from '../assets/AnimeBG.png';
 
 const styles = (theme: any) => ({
@@ -19,7 +19,8 @@ const styles = (theme: any) => ({
     width: '100%',
     position: 'relative',
     overflow: 'hidden',
-    paddingTop: theme.mixins.toolbar.minHeight * 2
+    paddingTop: theme.mixins.toolbar.minHeight * 2,
+    background: 'rgba(0,0,0,.8)'
   },
   bannerImage: {
     width: '100%',
@@ -56,14 +57,8 @@ const styles = (theme: any) => ({
 });
 
 class Anime extends React.Component<any> {
-  public video: HTMLVideoElement | null;
-
   public constructor(props: any) {
     super(props);
-  }
-
-  public componentDidMount() {
-    (this.video as HTMLVideoElement).playbackRate = 2;
   }
 
   public render() {
@@ -71,22 +66,7 @@ class Anime extends React.Component<any> {
     return (
       <div className="routeContainer">
         <Grid container={true} className={classes.grid}>
-          <Grid item={true} xs={'auto'} className={classes.bannerGrid}>
-            <video
-              src={ABG}
-              muted={true}
-              loop={true}
-              autoPlay={true}
-              ref={video => (this.video = video)}
-              className={classes.bannerVideo}
-            />
-            <Typography style={{ fontWeight: 700 }} variant="display4">
-              Anime
-            </Typography>
-            <Typography variant="title">
-              Watch any kind of anime, anytime.
-            </Typography>
-          </Grid>
+          <Grid item={true} xs={'auto'} className={classes.bannerGrid} />
           <Grid item={true} xs={'auto'} className={classes.section}>
             <Typography className={classes.sectionTitle} variant="title">
               Ongoing

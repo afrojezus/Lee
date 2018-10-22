@@ -13,6 +13,7 @@ import {
   Menu,
   MenuItem,
   Paper,
+  Switch as MUISwitch,
   TextField,
   Toolbar,
   Typography,
@@ -23,6 +24,7 @@ import classnames from 'classnames';
 import * as React from 'react';
 import { Link, NavLink, Route, Switch, withRouter } from 'react-router-dom';
 import LeeIcon from './assets/Icon.png';
+import LeeNetIcon from './assets/IconNet.png';
 import Anime from './routes/anime';
 import Discover from './routes/discover';
 import Home from './routes/home';
@@ -130,8 +132,23 @@ const styles = (theme: any) => ({
 class App extends React.Component<any> {
   public state = {
     anchorEl: undefined,
-    searchValue: ''
+    searchValue: '',
+    netMode: false
   };
+  public constructor(props: any) {
+    super(props);
+    this.handleModeSwitch();
+  }
+
+  public toggleNetMode = () =>
+    this.setState({ netMode: !this.state.netMode }, () =>
+      this.handleModeSwitch()
+    );
+
+  public handleModeSwitch = () =>
+    this.state.netMode
+      ? this.props.history.push('/')
+      : this.props.history.push('/music');
 
   public handleClick = (event: any) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -160,35 +177,57 @@ class App extends React.Component<any> {
           >
             <Toolbar className={classes.sideToolbarPadding}>
               <IconButton onClick={this.handleAppMenu}>
-                <img alt="" src={LeeIcon} className={classes.appIcon} />
+                {this.state.netMode ? (
+                  <img alt="" src={LeeNetIcon} className={classes.appIcon} />
+                ) : (
+                  <img alt="" src={LeeIcon} className={classes.appIcon} />
+                )}
               </IconButton>
-              <Typography variant="title">Lee </Typography>
+              <Typography variant="title">
+                Lee
+                {this.state.netMode ? 'Net' : null}
+              </Typography>
               <Typography
                 variant="title"
                 style={{ color: 'rgba(255,255,255,.2)' }}
               >
                 0.1
               </Typography>
+              <div style={{ flex: 1 }} />
+              <MUISwitch
+                checked={this.state.netMode}
+                onChange={this.toggleNetMode}
+                value={true}
+                color="primary"
+              />
             </Toolbar>
           </AppBar>
           <List component="nav">
-            <NavLink to="/" exact={true} activeClassName="activeList">
-              <ListItem button={true}>
-                <ListItemIcon>
-                  <MICON.HomeOutlined />
-                </ListItemIcon>
-                <ListItemText primary="Home" />
-              </ListItem>
-            </NavLink>
-            <NavLink to="/discover" exact={true} activeClassName="activeList">
-              <ListItem button={true}>
-                <ListItemIcon>
-                  <MICON.ExploreOutlined />
-                </ListItemIcon>
-                <ListItemText primary="Discover" />
-              </ListItem>
-            </NavLink>
-            <Divider style={{ marginTop: 16, marginBottom: 16 }} />
+            {this.state.netMode ? (
+              <div>
+                <NavLink to="/" exact={true} activeClassName="activeList">
+                  <ListItem button={true}>
+                    <ListItemIcon>
+                      <MICON.HomeOutlined />
+                    </ListItemIcon>
+                    <ListItemText primary="Home" />
+                  </ListItem>
+                </NavLink>
+                <NavLink
+                  to="/discover"
+                  exact={true}
+                  activeClassName="activeList"
+                >
+                  <ListItem button={true}>
+                    <ListItemIcon>
+                      <MICON.ExploreOutlined />
+                    </ListItemIcon>
+                    <ListItemText primary="Discover" />
+                  </ListItem>
+                </NavLink>
+                <Divider style={{ marginTop: 16, marginBottom: 16 }} />
+              </div>
+            ) : null}
             <NavLink to="/music" exact={true} activeClassName="activeList">
               <ListItem button={true}>
                 <ListItemIcon>
@@ -205,30 +244,47 @@ class App extends React.Component<any> {
                 <ListItemText primary="Video" />
               </ListItem>
             </NavLink>
-            <NavLink to="/anime" exact={true} activeClassName="activeList">
-              <ListItem button={true}>
-                <ListItemIcon>
-                  <Typography className={classnames(classes.nicoIcon)}>
-                    uwu
-                  </Typography>
-                </ListItemIcon>
-                <ListItemText primary="Anime" />
-              </ListItem>
-            </NavLink>
+            {this.state.netMode ? (
+              <NavLink to="/anime" exact={true} activeClassName="activeList">
+                <ListItem button={true}>
+                  <ListItemIcon>
+                    <Typography className={classnames(classes.nicoIcon)}>
+                      uwu
+                    </Typography>
+                  </ListItemIcon>
+                  <ListItemText primary="Anime" />
+                </ListItem>
+              </NavLink>
+            ) : null}
             <Divider style={{ marginTop: 16, marginBottom: 16 }} />
             <List
               component="nav"
               subheader={
-                <ListSubheader component="div">Communities</ListSubheader>
+                <ListSubheader component="div">Playlists</ListSubheader>
               }
             >
               <ListItem button={true}>
                 <ListItemIcon>
-                  <MICON.ListAltOutlined />
+                  <MICON.LibraryMusicOutlined />
                 </ListItemIcon>
-                <ListItemText inset={true} primary="Onigiri" />
+                <ListItemText inset={true} primary="Most played" />
               </ListItem>
             </List>
+            {this.state.netMode ? (
+              <List
+                component="nav"
+                subheader={
+                  <ListSubheader component="div">Communities</ListSubheader>
+                }
+              >
+                <ListItem button={true}>
+                  <ListItemIcon>
+                    <MICON.ListAltOutlined />
+                  </ListItemIcon>
+                  <ListItemText inset={true} primary="Onigiri" />
+                </ListItem>
+              </List>
+            ) : null}
           </List>
           <div style={{ flex: 1 }} />
           <Paper className={classes.sidePlayer}>
@@ -272,41 +328,47 @@ class App extends React.Component<any> {
                 </Paper>
               </div>
               <div style={{ flex: 1 }} />
-              <IconButton>
-                <MICON.MessageOutlined />
-              </IconButton>
-              <Button
-                aria-owns={anchorEl ? 'user-menu' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleClick}
-                style={{ marginRight: 16 }}
-              >
-                <Avatar
-                  src="https://cdn.discordapp.com/attachments/495368554678321163/502233186911387679/1508887494012.png"
-                  style={{ backgroundColor: '#111' }}
-                />
-                <Typography style={{ margin: '0 16px' }}>Anonymous</Typography>
-                <Icon>
-                  <MICON.ArrowDropDownOutlined />
-                </Icon>
-              </Button>
-              <Menu
-                id="user-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={this.closeMenu}
-                classes={{ paper: classes.userMenu }}
-                anchorReference={anchorEl}
-              >
-                <Link to="user" onClick={this.closeMenu}>
-                  <MenuItem>Profile</MenuItem>
-                </Link>
-                <Link to="settings" onClick={this.closeMenu}>
-                  <MenuItem>Settings</MenuItem>
-                </Link>
-                <Divider />
-                <MenuItem>Log out</MenuItem>
-              </Menu>
+              {this.state.netMode ? (
+                <div>
+                  <IconButton>
+                    <MICON.MessageOutlined />
+                  </IconButton>
+                  <Button
+                    aria-owns={anchorEl ? 'user-menu' : undefined}
+                    aria-haspopup="true"
+                    onClick={this.handleClick}
+                    style={{ marginRight: 16 }}
+                  >
+                    <Avatar
+                      src="https://cdn.discordapp.com/attachments/495368554678321163/502233186911387679/1508887494012.png"
+                      style={{ backgroundColor: '#111' }}
+                    />
+                    <Typography style={{ margin: '0 16px' }}>
+                      Anonymous
+                    </Typography>
+                    <Icon>
+                      <MICON.ArrowDropDownOutlined />
+                    </Icon>
+                  </Button>
+                  <Menu
+                    id="user-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.closeMenu}
+                    classes={{ paper: classes.userMenu }}
+                    anchorReference={anchorEl}
+                  >
+                    <Link to="user" onClick={this.closeMenu}>
+                      <MenuItem>Profile</MenuItem>
+                    </Link>
+                    <Link to="settings" onClick={this.closeMenu}>
+                      <MenuItem>Settings</MenuItem>
+                    </Link>
+                    <Divider />
+                    <MenuItem>Log out</MenuItem>
+                  </Menu>
+                </div>
+              ) : null}
               {elec ? (
                 <div>
                   <IconButton onClick={this.eMinimize}>

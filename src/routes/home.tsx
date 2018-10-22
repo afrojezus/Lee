@@ -58,7 +58,7 @@ class Home extends React.Component<any> {
           <Grid item={true} xs={'auto'} className={classes.bannerGrid}>
             <img src={Ripple} alt="" className={classes.bannerImage} />
             <Typography style={{ fontWeight: 700 }} variant="display2">
-              A place for your media, online and offline.
+              Welcome back, username
             </Typography>
             <Typography variant="title">
               What would you like to do today?
