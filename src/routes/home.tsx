@@ -8,7 +8,7 @@ import {
   withStyles
 } from '@material-ui/core';
 import React from 'react';
-import Ripple from '../assets/Ripple.mp4';
+import Ripple from '../assets/DefaultBG.png';
 
 const styles = (theme: any) => ({
   grid: {
@@ -21,11 +21,11 @@ const styles = (theme: any) => ({
     overflow: 'hidden',
     paddingTop: theme.mixins.toolbar.minHeight * 2
   },
-  bannerVideo: {
+  bannerImage: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
-    filter: 'brightness(0.1) grayscale(1)',
+    filter: 'brightness(0.3)',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -46,32 +46,19 @@ const styles = (theme: any) => ({
 });
 
 class Home extends React.Component<any> {
-  public video: HTMLVideoElement | null;
-
   public constructor(props: any) {
     super(props);
-  }
-
-  public componentDidMount() {
-    (this.video as HTMLVideoElement).playbackRate = 0.5;
   }
 
   public render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div className="routeContainer">
         <Grid container={true} className={classes.grid}>
           <Grid item={true} xs={'auto'} className={classes.bannerGrid}>
-            <video
-              src={Ripple}
-              muted={true}
-              loop={true}
-              autoPlay={true}
-              ref={video => (this.video = video)}
-              className={classes.bannerVideo}
-            />
+            <img src={Ripple} alt="" className={classes.bannerImage} />
             <Typography style={{ fontWeight: 700 }} variant="display2">
-              Lee. A place for your media, online and offline.
+              A place for your media, online and offline.
             </Typography>
             <Typography variant="title">
               What would you like to do today?

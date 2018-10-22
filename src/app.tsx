@@ -3,10 +3,15 @@ import {
   Avatar,
   Button,
   Divider,
+  Icon,
   IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
   Menu,
   MenuItem,
-  MenuList,
   Paper,
   TextField,
   Toolbar,
@@ -16,13 +21,17 @@ import {
 import * as MICON from '@material-ui/icons';
 import classnames from 'classnames';
 import * as React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Link, NavLink, Route, Switch, withRouter } from 'react-router-dom';
 import LeeIcon from './assets/Icon.png';
-import Nico from './assets/Nico.png';
+import Anime from './routes/anime';
+import Discover from './routes/discover';
 import Home from './routes/home';
+import Music from './routes/music';
+import User from './routes/user';
+import Video from './routes/video';
 import withRoot from './withRoot';
 
-const elec = window['require']('electron');
+const elec = window['require'] ? window['require']('electron') : null;
 
 const styles = (theme: any) => ({
   appTitle: {
@@ -41,7 +50,9 @@ const styles = (theme: any) => ({
     width: 300,
     backgroundColor: '#111',
     position: 'fixed',
-    height: '100%'
+    height: '100%',
+    display: 'inline-flex',
+    flexDirection: 'column'
   },
   sideToolbar: {
     width: 300,
@@ -60,7 +71,7 @@ const styles = (theme: any) => ({
   mainToolbar: {
     width: 'calc(100% - 300px)',
     ['-webkitAppRegion']: 'drag',
-    backgroundColor: 'transparent'
+    background: 'linear-gradient(to bottom, rgba(0,0,0,.8), transparent)'
   },
   mainToolbarInternal: {
     paddingLeft: 8,
@@ -107,7 +118,12 @@ const styles = (theme: any) => ({
   },
   nicoIcon: {
     width: 24,
-    height: 24
+    height: 24,
+    margin: 'auto'
+  },
+  sidePlayer: {
+    borderRadius: 0,
+    padding: theme.spacing.unit
   }
 });
 
@@ -124,6 +140,9 @@ class App extends React.Component<any> {
   public closeMenu = () => this.setState({ anchorEl: undefined });
 
   public handleAppMenu = () => {
+    if (!elec) {
+      return this.props.history.push('/');
+    }
     const menu = elec.remote.Menu.getApplicationMenu();
     return menu.popup({});
   };
@@ -143,45 +162,95 @@ class App extends React.Component<any> {
               <IconButton onClick={this.handleAppMenu}>
                 <img alt="" src={LeeIcon} className={classes.appIcon} />
               </IconButton>
+              <Typography variant="title">Lee </Typography>
+              <Typography
+                variant="title"
+                style={{ color: 'rgba(255,255,255,.2)' }}
+              >
+                0.1
+              </Typography>
             </Toolbar>
           </AppBar>
-          <MenuList>
-            <MenuItem>
-              <MICON.HomeOutlined className={classes.menuListItem} />
-              Home
-            </MenuItem>
-            <MenuItem>
-              <MICON.ExploreOutlined className={classes.menuListItem} />
-              Discover
-            </MenuItem>
+          <List component="nav">
+            <NavLink to="/" exact={true} activeClassName="activeList">
+              <ListItem button={true}>
+                <ListItemIcon>
+                  <MICON.HomeOutlined />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </NavLink>
+            <NavLink to="/discover" exact={true} activeClassName="activeList">
+              <ListItem button={true}>
+                <ListItemIcon>
+                  <MICON.ExploreOutlined />
+                </ListItemIcon>
+                <ListItemText primary="Discover" />
+              </ListItem>
+            </NavLink>
             <Divider style={{ marginTop: 16, marginBottom: 16 }} />
-            <MenuItem>
-              <MICON.MusicNoteOutlined className={classes.menuListItem} />
-              Music
-            </MenuItem>
-            <MenuItem>
-              <MICON.VideoLibraryOutlined className={classes.menuListItem} />
-              Video
-            </MenuItem>
-            <MenuItem>
-              <img
-                alt=""
-                src={Nico}
-                className={classnames(classes.nicoIcon, classes.menuListItem)}
-              />
-              Anime
-            </MenuItem>
-          </MenuList>
+            <NavLink to="/music" exact={true} activeClassName="activeList">
+              <ListItem button={true}>
+                <ListItemIcon>
+                  <MICON.MusicNoteOutlined />
+                </ListItemIcon>
+                <ListItemText primary="Music" />
+              </ListItem>
+            </NavLink>
+            <NavLink to="/video" exact={true} activeClassName="activeList">
+              <ListItem button={true}>
+                <ListItemIcon>
+                  <MICON.VideoLibraryOutlined />
+                </ListItemIcon>
+                <ListItemText primary="Video" />
+              </ListItem>
+            </NavLink>
+            <NavLink to="/anime" exact={true} activeClassName="activeList">
+              <ListItem button={true}>
+                <ListItemIcon>
+                  <Typography className={classnames(classes.nicoIcon)}>
+                    uwu
+                  </Typography>
+                </ListItemIcon>
+                <ListItemText primary="Anime" />
+              </ListItem>
+            </NavLink>
+            <Divider style={{ marginTop: 16, marginBottom: 16 }} />
+            <List
+              component="nav"
+              subheader={
+                <ListSubheader component="div">Communities</ListSubheader>
+              }
+            >
+              <ListItem button={true}>
+                <ListItemIcon>
+                  <MICON.ListAltOutlined />
+                </ListItemIcon>
+                <ListItemText inset={true} primary="Onigiri" />
+              </ListItem>
+            </List>
+          </List>
+          <div style={{ flex: 1 }} />
+          <Paper className={classes.sidePlayer}>
+            <Typography variant="subheading">Nothing is playing</Typography>
+          </Paper>
         </div>
         <div className={classes.mainContent}>
           <AppBar color="default" className={classes.mainToolbar}>
             <Toolbar className={classes.mainToolbarInternal}>
-              <IconButton>
-                <MICON.ArrowBackOutlined />
-              </IconButton>
-              <IconButton>
-                <MICON.ArrowForwardOutlined />
-              </IconButton>
+              {elec ? (
+                <div>
+                  <IconButton
+                    disabled={Boolean(this.props.history.length < 0)}
+                    onClick={this.routeNavigateGoBack}
+                  >
+                    <MICON.ArrowBackOutlined />
+                  </IconButton>
+                  <IconButton onClick={this.routeNavigateGoForward}>
+                    <MICON.ArrowForwardOutlined />
+                  </IconButton>
+                </div>
+              ) : null}
               <div>
                 <Paper className={classes.searchBar}>
                   <MICON.SearchOutlined className={classes.searchIcon} />
@@ -203,14 +272,23 @@ class App extends React.Component<any> {
                 </Paper>
               </div>
               <div style={{ flex: 1 }} />
+              <IconButton>
+                <MICON.MessageOutlined />
+              </IconButton>
               <Button
                 aria-owns={anchorEl ? 'user-menu' : undefined}
                 aria-haspopup="true"
                 onClick={this.handleClick}
                 style={{ marginRight: 16 }}
               >
-                <Avatar src="" style={{ backgroundColor: '#111' }} />
-                <Typography style={{ marginLeft: 16 }}>Anonymous</Typography>
+                <Avatar
+                  src="https://cdn.discordapp.com/attachments/495368554678321163/502233186911387679/1508887494012.png"
+                  style={{ backgroundColor: '#111' }}
+                />
+                <Typography style={{ margin: '0 16px' }}>Anonymous</Typography>
+                <Icon>
+                  <MICON.ArrowDropDownOutlined />
+                </Icon>
               </Button>
               <Menu
                 id="user-menu"
@@ -220,37 +298,57 @@ class App extends React.Component<any> {
                 classes={{ paper: classes.userMenu }}
                 anchorReference={anchorEl}
               >
-                <MenuItem>Profile</MenuItem>
+                <Link to="user" onClick={this.closeMenu}>
+                  <MenuItem>Profile</MenuItem>
+                </Link>
+                <Link to="settings" onClick={this.closeMenu}>
+                  <MenuItem>Settings</MenuItem>
+                </Link>
+                <Divider />
                 <MenuItem>Log out</MenuItem>
               </Menu>
-              <IconButton onClick={this.eMinimize}>
-                <MICON.MinimizeOutlined />
-              </IconButton>
-              <IconButton onClick={this.eMaximize}>
-                {window['require']('electron')
-                  .remote.getCurrentWindow()
-                  .isMaximized() ? (
-                  <MICON.FullscreenExitOutlined />
-                ) : (
-                  <MICON.FullscreenOutlined />
-                )}
-              </IconButton>
-              <IconButton onClick={this.eClose}>
-                <MICON.CloseOutlined />
-              </IconButton>
+              {elec ? (
+                <div>
+                  <IconButton onClick={this.eMinimize}>
+                    <MICON.MinimizeOutlined />
+                  </IconButton>
+                  <IconButton onClick={this.eMaximize}>
+                    {window['require']('electron')
+                      .remote.getCurrentWindow()
+                      .isMaximized() ? (
+                      <MICON.FullscreenExitOutlined />
+                    ) : (
+                      <MICON.FullscreenOutlined />
+                    )}
+                  </IconButton>
+                  <IconButton onClick={this.eClose}>
+                    <MICON.CloseOutlined />
+                  </IconButton>
+                </div>
+              ) : null}
             </Toolbar>
           </AppBar>
           <div>
-            <BrowserRouter>
-              <Switch>
-                <Route path="/" exact={true} component={Home} />
-              </Switch>
-            </BrowserRouter>
+            <Switch>
+              <Route path="/" exact={true} component={Home} />
+              <Route path="/user" exact={true} component={User} />
+              <Route path="/discover" exact={true} component={Discover} />
+              <Route path="/music" exact={true} component={Music} />
+              <Route path="/video" exact={true} component={Video} />
+              <Route path="/anime" exact={true} component={Anime} />
+            </Switch>
           </div>
         </div>
       </div>
     );
   }
+
+  public routeNavigateGoBack = () =>
+    this.props.history.length > 0 ? this.props.history.goBack() : null;
+
+  public routeNavigateGoForward = () => this.props.history.goForward();
+
+  public routeGoToSettings = () => this.props.history.push('/settings');
 
   public searchChangeText = (event: any) =>
     this.setState({ searchValue: event.target.value });
@@ -279,4 +377,4 @@ class App extends React.Component<any> {
   };
 }
 
-export default withRoot(withStyles(styles as any)(App));
+export default withRoot(withStyles(styles as any)(withRouter(App)));

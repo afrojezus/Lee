@@ -15,8 +15,8 @@ let mainWindow;
 
 createWindow = () => {
   mainWindow = new BrowserWindow({
-    backgroundColor: '#F7F7F7',
-    minWidth: 880,
+    backgroundColor: '#111',
+    minWidth: 900,
     show: false,
     frame: false,
     titleBarStyle: 'hidden',

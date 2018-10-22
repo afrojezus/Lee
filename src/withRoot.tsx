@@ -49,7 +49,7 @@ const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
     fontFamily:
-      "BlinkMacSystemFont, -apple-system, 'SF Display', 'Segoe UI', 'Roboto', 'Ubuntu', 'Arial'"
+      "'CircularStd', BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Ubuntu', 'Arial'"
   }
 });
 
