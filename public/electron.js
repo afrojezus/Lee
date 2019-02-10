@@ -7,9 +7,26 @@ const {
   TouchBar
 } = require('electron');
 const { TouchBarButton, TouchBarLabel, TouchBarSpacer } = TouchBar;
+const { getPluginEntry } = require('mpv.js');
 
 const path = require('path');
 const isDev = require('electron-is-dev');
+
+const pluginDir = path.join(
+  path.dirname(require.resolve('mpv.js')),
+  'build',
+  'Release'
+);
+
+if (process.platform !== 'linux') {
+  process.chdir(pluginDir);
+}
+// To support a broader number of systems.
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
+app.commandLine.appendSwitch(
+  'register-pepper-plugins',
+  getPluginEntry(pluginDir)
+);
 
 let mainWindow;
 
@@ -22,7 +39,8 @@ createWindow = () => {
     titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true,
-      preload: __dirname + '/preload.js'
+      preload: __dirname + '/preload.js',
+      plugins: true
     },
     height: 860,
     width: 1280

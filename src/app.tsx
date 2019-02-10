@@ -25,6 +25,7 @@ import * as React from 'react';
 import { Link, NavLink, Route, Switch, withRouter } from 'react-router-dom';
 import LeeIcon from './assets/Icon.png';
 import LeeNetIcon from './assets/IconNet.png';
+import Player from './components/player';
 import Anime from './routes/anime';
 import Discover from './routes/discover';
 import Home from './routes/home';
@@ -133,7 +134,9 @@ class App extends React.Component<any> {
   public state = {
     anchorEl: undefined,
     searchValue: '',
-    netMode: false
+    netMode: false,
+    source: '',
+    playing: false
   };
   public constructor(props: any) {
     super(props);
@@ -165,7 +168,7 @@ class App extends React.Component<any> {
   };
 
   public render() {
-    const { anchorEl, searchValue } = this.state;
+    const { anchorEl, searchValue, source, playing } = this.state;
     const { classes } = this.props;
     return (
       <div className={classes.App}>
@@ -400,6 +403,7 @@ class App extends React.Component<any> {
               <Route path="/anime" exact={true} component={Anime} />
             </Switch>
           </div>
+          <Player source={source} playing={playing} />
         </div>
       </div>
     );
