@@ -1,0 +1,49 @@
+﻿<Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Lee"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    x:Class="Lee.MainPage"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Border x:Name="TitleBar" BorderThickness="1" VerticalAlignment="Top" Height="42" Margin="250,0,0,0" Canvas.ZIndex="250000" Background="#00000000">
+        </Border>
+        <MediaPlayerElement x:Name="mediaElement" AreTransportControlsEnabled="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+        <MenuBar VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            <MenuBarItem Title="Lee" IsEnabled="False" FontWeight="SemiBold"></MenuBarItem>
+            <MenuBarItem Title="File">
+                <MenuFlyoutItem x:Name="M_FileOpen" Click="M_FileOpen_Click"  Text="Open file..." />
+                <MenuFlyoutItem x:Name="M_FileOpenURL" Click="M_FileOpenURL_Click" Text="Open URL..." />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem x:Name="M_FileExit" Click="M_FileExit_Click" Text="Exit" />
+            </MenuBarItem>
+
+            <MenuBarItem Title="Edit">
+                <MenuFlyoutItem Text="Undo" />
+                <MenuFlyoutItem Text="Cut" />
+                <MenuFlyoutItem Text="Copy" />
+                <MenuFlyoutItem Text="Paste" />
+            </MenuBarItem>
+
+            <MenuBarItem Title="View">
+                <MenuFlyoutItem Text="Output" />
+                <MenuFlyoutSeparator />
+                <controls:RadioMenuFlyoutItem Text="Landscape" GroupName="OrientationGroup" />
+                <controls:RadioMenuFlyoutItem Text="Portrait" GroupName="OrientationGroup" IsChecked="True" />
+                <MenuFlyoutSeparator />
+                <controls:RadioMenuFlyoutItem Text="Small icons" GroupName="SizeGroup" />
+                <controls:RadioMenuFlyoutItem Text="Medium icons" IsChecked="True" GroupName="SizeGroup" />
+                <controls:RadioMenuFlyoutItem Text="Large icons" GroupName="SizeGroup" />
+            </MenuBarItem>
+
+            <MenuBarItem Title="Help">
+                <MenuFlyoutItem Click="M_Help_Click"  x:Name="M_Help" Text="About" />
+            </MenuBarItem>
+        </MenuBar>
+    </Grid>
+</Page>
